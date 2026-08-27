@@ -1,47 +1,50 @@
-import pandas as pd
+analyst_name = "peter bundi"
+bank_target = "equity bank"
+internship_complete=True
+loan_portfolio=10305000
+npl_ratio= 13.59
 
-# Load the Kenya World Bank Excel file
-# Change the path to where you saved the file on your laptop
-df = pd.read_excel('Kenya_Financial_Data_CLEAN.xlsx')
+print(f"Analyst:{analyst_name}")
+print(f"Target_employer:{bank_target}")
+print(f"Internship_complete:{internship_complete}")
+print(f"loan_portfolio_kes:{loan_portfolio:,}")
+print(f"Npl_ratio:{npl_ratio}%")
 
-# Explore the data
-print(df.shape)
-print(df.head())
-print(df.columns.tolist())
-# Extract GDP growth row
-gdp = df[df['Indicator Name'] == 'GDP growth (annual %)']
 
-# Convert to a simple series — years as index, values as data
-gdp_series = gdp.iloc[0, 1:].astype(float)
-gdp_series.index = gdp_series.index.astype(str)
 
-print("\nKenya GDP Growth (2010-2024):")
-print(gdp_series.round(2).to_string())
 
-print(f"\nBest year: {gdp_series.idxmax()} ({gdp_series.max():.2f}%)")
-print(f"Worst year: {gdp_series.idxmin()} ({gdp_series.min():.2f}%)")
-print(f"Average growth: {gdp_series.mean():.2f}%")
-# Extract NPL row — same as filtering in SQL
-npl = df[df['Indicator Name'] == 'Bank nonperforming loans to total gross loans (%)']
+counties=["meru","nairobi","mombasa","nakuru","kisumu"]
+print(counties[0])
+print(counties[-1])
+print(len(counties))
 
-# Take the numbers only, make them floats
-npl_series = npl.iloc[0, 1:].astype(float)
-npl_series.index = npl_series.index.astype(str)
+gdp_growth=[8.06, 5.12, 4.57, 3.80, 5.02, 4.97, 4.21, 3.84, 5.65, 5.11, -0.27, 7.59, 4.86, 5.72, 4.66]
+print(max(gdp_growth))
+print(min(gdp_growth))
+print(len(gdp_growth))
 
-# Print year by year
-print("\nKenya NPL Ratio (2010-2024):")
-print(npl_series.round(2).to_string())
-
-# For NPL — lower is better, higher is worse
-print(f"\nBest year (lowest NPL): {npl_series.idxmin()} ({npl_series.min():.2f}%)")
-print(f"Worst year (highest NPL): {npl_series.idxmax()} ({npl_series.max():.2f}%)")
-print(f"Average NPL: {npl_series.mean():.2f}%")
-
-inf=df[df['Indicator Name']=='Inflation, consumer prices (annual %)']
-inf_series=inf.iloc[0,1:].astype(float)
-inf_series.index = inf_series.index.astype(str)
-print("\nKenya INF Ratio (2010-2024):")
-print(inf_series.round(2).to_string())
-print(f"\nBest year (lowest INF): {inf_series.idxmin()} ({inf_series.min():.2f}%)")
-print(f"Worst year (highest INF): {inf_series.idxmax()} ({inf_series.max():.2f}%)")
-print(f"Average INF: {inf_series.mean():.2f}%")
+branches=[
+ {
+    "branch_name":"westlands branch",
+    "county":"nairobi county",
+    "total_loans":"35",
+    "portfolio_kes":23000000,
+    "npl_ratio":(13.35)
+ },
+ {
+     "branch_name":"nairobi cbd",
+     "county":"nairobi county",
+     "total-loans":"24",
+     "portfolio_kes":34000000,
+     "npl_ratio":34.45
+ },
+ {
+     "branch_name":"mombasa",
+     "county":"mombasa",
+     "total_loans":"45",
+     "portfolio_kes":56000000,
+     "npl_ratio":23.34
+ }
+]
+for branch in branches:
+    print(f"{branch['branch_name']}:{branch['portfolio_kes']}")
