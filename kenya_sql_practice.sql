@@ -55,19 +55,24 @@ limit 1;
 -- Q5: What is the average GDP growth across all years?
 -- Hint: SELECT AVG(value) FROM yearly_values WHERE indicator_id = 1
 -- Write your query below:
-
+select avg(value) from yearly_values
+where indicator_id=1;
 
 
 -- Q6: What is the highest NPL ratio ever recorded?
 -- Hint: SELECT MAX(value) FROM yearly_values WHERE indicator_id = 2
 -- Write your query below:
-
+select max(value)
+from yearly_values
+where indicator_id=2;
 
 
 -- Q7: What is the lowest inflation rate ever recorded?
 -- Hint: SELECT MIN(value) FROM yearly_values WHERE indicator_id = 3
 -- Write your query below:
-
+select min(value)
+from yearly_values
+where indicator_id= 3;
 
 
 -- ============================================================
