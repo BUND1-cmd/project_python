@@ -86,14 +86,21 @@ where indicator_id= 3;
 --       FROM indicators i JOIN yearly_values yv ON i.indicator_id = yv.indicator_id
 --       GROUP BY i.indicator_id, i.indicator_name
 -- Write your query below:
-
+select i.indicator_id,i.indicator_name,avg(yv.value)
+from indicators i 
+join yearly_values yv on i.indicator_id = yv.indicator_id
+group by i.indicator_id,i.indicator_name;
 
 
 -- Q9: Show the count of years with data for each indicator
 -- Display: indicator_name, number_of_years
 -- Hint: COUNT(*) counts rows in each group
 -- Write your query below:
-
+select i.indicator_name,
+       count(*)  as number_of_years
+from indicators i 
+join yearly_values yv on i.indicator_id = yv.indicator_id
+group by i.indicator_name;
 
 
 -- ============================================================
@@ -108,7 +115,10 @@ where indicator_id= 3;
 --       FROM indicators i JOIN yearly_values yv ON i.indicator_id = yv.indicator_id
 --       ORDER BY i.indicator_name, yv.year
 -- Write your query below:
-
+select i.indicator_name,yv.year,yv.value 
+from indicators i 
+join yearly_values yv on i.indicator_id = yv.indicator_id
+order by i.indicator_name,yv.year;
 
 
 -- ============================================================
