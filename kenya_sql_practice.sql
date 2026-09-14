@@ -130,15 +130,21 @@ order by i.indicator_name,yv.year;
 -- Display: indicator_name, avg_value
 -- Hint: HAVING AVG(yv.value) > 5
 -- Write your query below:
-
+select i.indicator_name,avg(yv.value) as average value
+from indicators i
+join yearly_values yv on i.indicator_id = yv.indicator_id
+group by i.indicator_name
+having avg(yv.value)>5;
 
 
 -- Q12: Show years where we have data for ALL 6 indicators
 -- Display: year, count_of_indicators
 -- Hint: HAVING COUNT(DISTINCT indicator_id) = 6
 -- Write your query below:
-
-
+select yv.year,count(distinct indicator_id)
+from yearly_values yv
+group by yv.year
+having count(distinct indicator_id) = 6;
 
 -- ============================================================
 -- DAY 7 — SUBQUERIES (queries inside queries)
