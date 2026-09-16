@@ -155,13 +155,25 @@ having count(distinct indicator_id) = 6;
 -- Display: year, gdp_value
 -- Hint: WHERE value = (SELECT MAX(value) FROM yearly_values WHERE indicator_id = 1)
 -- Write your query below:
-
+select value as gdp_value,year from yearly_values
+where indicator_id =1 AND
+ value = (
+    select max(value) from yearly_values
+    where indicator_id = 1
+);
 
 
 -- Q14: Show all years where NPL was above the average NPL
 -- Display: year, npl_value
 -- Hint: WHERE indicator_id = 2 AND value > (SELECT AVG(value) FROM yearly_values WHERE indicator_id = 2)
 -- Write your query below:
+select value as npl_value,year
+from yearly_values
+where indicator_id= 2 AND
+ value > (
+    select avg(value) from yearly_values
+    where indicator_id = 2
+ );
 
 
 
