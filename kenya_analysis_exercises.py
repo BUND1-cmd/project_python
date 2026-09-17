@@ -56,16 +56,20 @@ print(summary_df)
 print("\n=== EXERCISE 1: GroupBy GDP Class ===")
 # Calculate: count, avg NPL, avg inflation, min/max GDP
 # Write your code here:
-
-
-
+print(summary_df.groupby('gdp_class')[['npl','inflation','gdp']].agg({
+    'npl':['mean','count'],
+    'inflation':'mean',
+    'gdp':['min','max']
+    }).round(2))
 # ============================================================
 # EXERCISE 2: GroupBy NPL class
 # ============================================================
 print("\n=== EXERCISE 2: GroupBy NPL Class ===")
 # Calculate: count, avg GDP, avg inflation
 # Write your code here:
-
+print(summary_df.groupby('npl_class')[['gdp','inflation']].agg({
+    'gdp':['mean','count'],
+    'inflation':'mean'}).round(2))
 
 
 # ============================================================
@@ -73,7 +77,13 @@ print("\n=== EXERCISE 2: GroupBy NPL Class ===")
 # ============================================================
 print("\n=== EXERCISE 3: Pivot - Count by GDP/NPL ===")
 # Write your code here:
-
+pivot_table = summary_df.pivot_table(
+    values = 'year',
+    index = 'gdp_class',
+    columns = 'npl_class',
+    aggfunc= 'count'
+).round(2)
+print(pivot_table)
 
 
 # ============================================================
@@ -81,7 +91,12 @@ print("\n=== EXERCISE 3: Pivot - Count by GDP/NPL ===")
 # ============================================================
 print("\n=== EXERCISE 4: Pivot - NPL by Year/GDP ===")
 # Write your code here:
-
+pivot_table= summary_df.pivot_table(
+    values = 'npl',
+    index = 'year',
+    columns = 'gdp_class'
+).round(2)
+print(pivot_table)
 
 
 # ============================================================
@@ -91,7 +106,11 @@ print("\n=== EXERCISE 5: Strong GDP Years Analysis ===")
 # Filter to only Strong GDP years
 # Calculate: average NPL, average inflation, count of years
 # Write your code here:
-
+strong_years=summary_df[summary_df['gdp_class']=='strong']
+print(strong_years[['npl','inflation']].agg({
+    'npl':['mean','count'],
+    'inflation':'mean'
+}).round(2))
 
 
 # ============================================================
@@ -101,6 +120,9 @@ print("\n=== EXERCISE 6: Strong GDP + Watch/Critical NPL ===")
 # Filter where GDP class = Strong AND NPL class is either Watch or Critical
 # Show: year, gdp, npl, inflation
 # Write your code here:
+filtered = summary_df[(summary_df['gdp_class']=='strong')&
+                      (summary_df['npl_class'].isin(['watch','critical']))]
+print(filtered[['year','gdp','npl','inflation']])
 
 
 
