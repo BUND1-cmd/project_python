@@ -133,7 +133,8 @@ print("\n=== EXERCISE 7: Top 5 Highest NPL Years ===")
 # Sort by NPL descending, show first 5 rows
 # Display: year, npl, npl_class, gdp, gdp_class
 # Write your code here:
-
+sorted = summary_df.sort_values('npl',ascending=False)
+print(sorted[['year','npl','npl_class','gdp','gdp_class']].head(5))
 
 
 # ============================================================
@@ -144,6 +145,9 @@ print("\n=== EXERCISE 8: NPL-GDP Gap ===")
 # Show: year, gdp, npl, npl_gdp_gap
 # Sort by npl_gdp_gap descending
 # Write your code here:
+summary_df['npl_gdp_gap']= summary_df['npl']- summary_df['gdp']
+sorted = summary_df.sort_values('npl_gdp_gap',ascending= False)
+print(sorted[['year','gdp','npl','npl_gdp_gap']].head())
 
 
 
@@ -159,6 +163,21 @@ print("\n=== EXERCISE 9: Economic Health Classification ===")
 # - "Fair" for everything else
 # Apply to summary_df and show results
 # Write your code here:
+def classify_economic_health(row):
+    gdp =row['gdp_class']
+    npl = row['npl_class']
+    if gdp =='strong' and npl == 'healthy':
+        return 'excellent'
+    elif gdp == 'strong' and npl=='watch':
+        return "good"
+    elif gdp == 'strong' and npl == 'critical':
+        return 'concerning'
+    elif gdp in['moderate','weak'] and npl== 'critical':
+        return 'weak'
+    else:
+        return 'fair'
+summary_df['economic_health']=summary_df.apply(classify_economic_health,axis=1)
+print(summary_df[['year','gdp_class','npl_class','economic_health']])
 
 
 
