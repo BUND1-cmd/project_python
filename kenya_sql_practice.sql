@@ -188,7 +188,7 @@ where indicator_id= 2 AND
 -- Hint: CASE WHEN yv.value < 5 THEN 'Healthy' WHEN yv.value <= 10 THEN 'Watch' ELSE 'Critical' END
 -- Write your query below:
 
-select year,CASE 
+select yv.year,yv.value as npl_value,CASE 
    WHEN yv.value<5 THEN 'healthy'
    when yv.value <= 10 then 'watch' 
    ELSE  'critical'
@@ -198,6 +198,15 @@ from yearly_values yv;
 -- Q16: Show GDP values with classification as Good (>5%), Medium (3-5%), or Weak (<3%)
 -- Display: year, gdp_value, classification
 -- Write your query below:
+select yv.year,
+       yv.value as gdp_value,
+       CASE 
+         WHEN  yv.value>5 THEN 'Good'
+         when yv.value >=3 then 'Medium' 
+         ELSE  'weak'
+       END as classification
+from yearly_values yv;
+
 
 
 
