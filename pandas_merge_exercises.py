@@ -12,13 +12,10 @@ Instructions:
 
 import pandas as pd
 
-# ============================================================
-# SETUP: Load your Kenya data
-# ============================================================
 df_clean = pd.read_excel('Kenya_Financial_Data_CLEAN.xlsx')
 df_clean = df_clean.iloc[:15, :16]
 
-# Recreate summary_df (your main dataset)
+
 def classify_gdp(gdp_rate):
     if gdp_rate > 5:
         return "strong"
@@ -84,7 +81,12 @@ unemployment_df = pd.DataFrame(unemployment_data)
 # TODO: Merge summary_df with unemployment_df using LEFT join
 # Expected: all 15 years from summary_df, unemployment data where available
 # Write your code here:
-
+merged_df = summary_df.merge(
+    unemployment_df,
+    on= 'year',
+    how='left'
+)
+print(merged_df)
 
 
 # ============================================================
@@ -96,9 +98,13 @@ print("="*60)
 
 # TODO: Merge using INNER join
 # Expected: only years 2015-2024 (where both have data)
-# Write your code here:
-
-
+# Write your code here
+inner_merged = summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='inner'
+)
+print(inner_merged)
 
 # ============================================================
 # EXERCISE 3: Right Join
@@ -110,7 +116,12 @@ print("="*60)
 # TODO: Merge using RIGHT join
 # Expected: all 10 unemployment years, GDP data where available
 # Write your code here:
-
+right_merged = summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='right'
+)
+print(right_merged)
 
 
 # ============================================================
@@ -123,8 +134,12 @@ print("="*60)
 # TODO: Merge using OUTER join
 # Expected: 15 rows (all years from both tables)
 # Write your code here:
-
-
+outer_merged = summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='outer'
+)
+print(outer_merged)
 
 # ============================================================
 # EXERCISE 5: Merging Two External Datasets
@@ -144,7 +159,18 @@ interest_df = pd.DataFrame(interest_rates)
 # Then merge the result with summary_df
 # Expected: all years from summary_df with unemployment and interest rates where available
 # Write your code here:
-
+interest_unemployment = unemployment_df.merge(
+    interest_df,
+    on='year',
+    how='outer'
+)
+merged_data= summary_df.merge(
+    interest_unemployment,
+    on='year',
+    how='left'
+)
+print(f"total_rows:{len(merged_data)}")
+print(merged_data[['year','gdp','unemployment_rate','cbk_rate']])
 
 
 # ============================================================
