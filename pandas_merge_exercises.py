@@ -184,7 +184,16 @@ print("="*60)
 # Then filter to show only years where unemployment > 5%
 # Display: year, gdp, npl, unemployment_rate
 # Write your code here:
-
+summary_unemployment = summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='left'
+)
+filtered = summary_unemployment[
+    (summary_unemployment['unemployment_rate'].notna()) &
+    (summary_unemployment['unemployment_rate']>5)
+]
+print(filtered[['year','gdp','unemployment_rate']])
 
 
 # ============================================================
@@ -199,7 +208,14 @@ print("="*60)
 # Sort by economic_stress descending
 # Display top 5 rows with year, npl, unemployment_rate, economic_stress
 # Write your code here:
-
+merged = summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='left'
+)
+merged['economic_stress']=merged['npl']+merged['unemployment_rate']
+sorted = merged.sort_values('economic_stress',ascending=False)
+print(sorted[['year','npl','unemployment_rate','economic_stress']].head(5))
 
 
 # ============================================================
@@ -213,7 +229,13 @@ print("="*60)
 # Find rows where unemployment_rate is NaN
 # Display: year, gdp, unemployment_rate (for years missing unemployment data)
 # Write your code here:
-
+sum_emp = summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='left'
+)
+filtered= sum_emp[sum_emp['unemployment_rate'].isna()]
+print(filtered[['year','gdp','unemployment_rate']])
 
 
 # ============================================================
@@ -229,8 +251,30 @@ print("="*60)
 # right_count = ?
 # outer_count = ?
 # Write your code here:
-
-
+inner_merge=summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='inner'
+)
+print(f"inner_merge:{len(inner_merge)}")
+outer_merge=summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='outer'
+)
+print(f"outer_merge:{len(outer_merge)}")
+left_merge=summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='left'
+)
+print(f"left_merge:{len(left_merge)}")
+right_merge=summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='right'
+)
+print(f"right_merge:{len(right_merge)}")
 
 # ============================================================
 # EXERCISE 10: Real-World Scenario - Adding Forecast Data
@@ -252,6 +296,17 @@ forecast_df = pd.DataFrame(forecast_data)
 # Then merge that result with forecast_df (outer)
 # Display last 5 rows showing: year, gdp, gdp_forecast, unemployment_rate, unemployment_forecast
 # Write your code here:
+summ_ump=summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='left'
+)
+merged=summ_ump.merge(
+    forecast_df,
+    on='year',
+    how='outer'
+)
+print(merged[['year','gdp','gdp_forecast','unemployment_rate','unemployment_forecast']].tail(5))
 
 
 
@@ -262,9 +317,10 @@ print("\n" + "="*60)
 print("REFLECTION QUESTIONS")
 print("="*60)
 print("""
-1. When would you use INNER join vs LEFT join?
-2. What happens to row count with each join type?
-3. How do NaN values appear after a left join?
+1. When would you use INNER join vs LEFT join? 
+= inner is used when both columns/rows exist in both tables while left join is used to keep all tables from left and add matches from right
+2. What happens to row count with each join type? counts the number of rows in each count
+3. How do NaN values appear after a left join?null
 4. When merging multiple datasets, what order matters?
-5. How can you identify data gaps after merging?
+5. How can you identify data gaps after merging?filter with isna()
 """)
