@@ -31,7 +31,13 @@ INSERT INTO indicators (indicator_name, category, description) VALUES
 --   SELECT i.indicator_name, yv.year, yv.value
 --   FROM indicators i RIGHT JOIN yearly_values yv ON i.indicator_id = yv.indicator_id;
 -- Write your query below:
-
+select i.indicator_name,yv.year,yv.value 
+from indicators i 
+left join yearly_values yv on i.indicator_id = yv.indicator_id
+UNION
+select i.indicator_name,yv.year,yv.value 
+from indicators i 
+right join yearly_values yv on i.indicator_id = yv.indicator_id;
 
 
 -- ============================================================
@@ -50,7 +56,9 @@ INSERT INTO indicators (indicator_name, category, description) VALUES
 --   FROM indicators i
 --   CROSS JOIN (SELECT DISTINCT year FROM yearly_values) y;
 -- Write your query below:
-
+select i.indicator_name,yv.year 
+from indicators i 
+cross join(select DISTINCT year from yearly_values )yv;
 
 
 -- ============================================================
@@ -72,7 +80,12 @@ INSERT INTO indicators (indicator_name, category, description) VALUES
 --    AND npl.indicator_id = 2
 --    AND lend.indicator_id = 4;
 -- Write your query below:
-
+select npl.year,npl.value as npl_value,lend.value as lending_rate
+from yearly_values npl
+join yearly_values lend 
+  on npl.year = lend.year
+  and npl.indicator_id = 2
+  and lend.indicator_id= 4;
 
 
 -- ============================================================
@@ -96,7 +109,12 @@ INSERT INTO indicators (indicator_name, category, description) VALUES
 --   WHERE indicator_id = 2
 --   ORDER BY year;
 -- Write your query below:
-
+select year,value,
+      lag(value) over (order by year) as prev_value,
+      value - lag(value) over (order by year) as val_change
+from yearly_values
+where indicator_id= 2
+order by year;
 
 
 -- Task B: Rank all years by GDP growth (indicator_id = 1),
@@ -108,8 +126,13 @@ INSERT INTO indicators (indicator_name, category, description) VALUES
 --   FROM yearly_values
 --   WHERE indicator_id = 1;
 -- Write your query below:
-
-
+select year,
+       value,
+       DENSE_RANK() over (
+        PARTITION BY indicator_id
+        order by value desc) as rank_no
+from yearly_values
+where indicator_id=1;
 
 -- ============================================================
 -- Q5: Views
