@@ -150,7 +150,14 @@ where indicator_id=1;
 --   FROM indicators i
 --   JOIN yearly_values yv ON i.indicator_id = yv.indicator_id;
 -- Write your CREATE VIEW + SELECT below:
-
+create view indicator_summary  as 
+select i.indicator_name,
+       i.category,
+       yv.year,
+       yv.value 
+from indicators i 
+join yearly_values yv ON
+  i.indicator_id=yv.indicator_id;
 
 
 -- ============================================================
@@ -169,5 +176,8 @@ where indicator_id=1;
 --   ALTER TABLE yearly_values ADD CONSTRAINT uq_indicator_year UNIQUE (indicator_id, year);
 --   ALTER TABLE yearly_values MODIFY value DECIMAL(10,2) NOT NULL;
 -- Write your ALTER statements below:
-
+alter table yearly_values
+add CONSTRAINT uq_indicator_year unique (indicator_id,year);
+alter table yearly_values
+modify value decimal(10,2) not null;
 
