@@ -80,7 +80,13 @@ print("="*60)
 # TODO: Calculate 3-year rolling average of NPL
 # Display: year, npl, rolling_3yr_npl
 # Write your code here:
-
+npl_series=summary_df.set_index('year')['npl']
+npl_rolling= npl_series.rolling(window=3,min_periods=1).mean()
+expected_npl=pd.DataFrame({
+    'npl':npl_series,
+    'average':npl_rolling
+})
+print(f"{expected_npl}")
 
 
 # ============================================================
@@ -93,7 +99,17 @@ print("="*60)
 # TODO: Calculate rolling averages with 3 different window sizes for GDP
 # Display: year, gdp, rolling_2yr, rolling_4yr, rolling_6yr
 # Write your code here:
-
+gdp_series= summary_df.set_index('year')['gdp']
+gdp_r_2= gdp_series.rolling(window=2,min_periods=1).mean()
+gdp_r_4= gdp_series.rolling(window=4,min_periods=1).mean()
+gdp_r_6= gdp_series.rolling(window=6,min_periods=1).mean()
+exp_gdp=pd.DataFrame({
+    'gdp':gdp_series,
+    '2-avg':gdp_r_2,
+    '4_avg':gdp_r_4,
+    '6-avg':gdp_r_6
+})
+print(f"{exp_gdp}")
 
 
 # ============================================================
@@ -107,6 +123,13 @@ print("="*60)
 # Display: year, inflation, rolling_4yr_sum
 # What does the rolling sum tell you about cumulative price pressure?
 # Write your code here:
+inflation_series = summary_df.set_index('year')['inflation']
+inf_4 = inflation_series.rolling(window=4,min_periods=1).sum()
+exp_inf= pd.DataFrame({
+    'inflation':inflation_series,
+    'rolling sum':inf_4
+})
+print(exp_inf)
 
 
 
@@ -236,7 +259,12 @@ unemployment_df = pd.DataFrame(unemployment_data)
 
 # TODO: Do all 4 merges (inner, left, right, outer) and print row count for each
 # Write your code here:
-
+inner_merge = summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='inner'
+)
+print(f"{inner_merge}")
 
 
 # ============================================================
