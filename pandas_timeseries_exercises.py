@@ -143,8 +143,14 @@ print("="*60)
 # TODO: Calculate expanding max (worst NPL so far) and expanding min (best NPL so far)
 # Display: year, npl, worst_npl_so_far, best_npl_so_far
 # Write your code here:
-
-
+npl_series = summary_df.set_index('year')['npl']
+npl_ex_m= npl_series.expanding().max()
+npl_ex_min = npl_series.expanding().min()
+ex_m_min= pd.DataFrame({
+    'npl_ex_m':npl_ex_m,
+    'npl_exx_min':npl_ex_min
+})
+print(f"{ex_m_min}")
 
 # ============================================================
 # EXERCISE 5: Cumulative Sum (Total burden over time)
@@ -157,7 +163,10 @@ print("="*60)
 # Display: year, npl, cumulative_npl_burden
 # What is the total NPL burden by 2024?
 # Write your code here:
-
+npl_series = summary_df.set_index('year')['npl']
+cumulative_burden_npl = npl_series.expanding().sum()
+ex_cum= pd.DataFrame({'npl':npl_series,'cum_npl_burden':cumulative_burden_npl})
+print(ex_cum)
 
 
 # ============================================================
@@ -171,8 +180,21 @@ print("="*60)
 # Display: year, gdp, gdp_change, npl, npl_change, inflation, inflation_change
 # Which indicator had the most volatile year-over-year changes?
 # Write your code here:
-
-
+gdp_series = summary_df.set_index('year')['gdp']
+gdp_change = gdp_series.diff()
+npl_series = summary_df.set_index('year')['npl']
+npl_change = npl_series.diff()
+inflation_series = summary_df.set_index('year')['inflation']
+inflation_change = inflation_series.diff()
+ex_change = pd.DataFrame({
+    'gdp':gdp_series,
+    'gdp_change':gdp_change,
+    'npl':npl_series,
+    'npl_change':npl_change,
+    'inflation':inflation_series,
+    'inflation_change':inflation_change
+})
+print(f"{ex_change}")
 
 # ============================================================
 # EXERCISE 7: Ranking Values
@@ -187,10 +209,23 @@ print("="*60)
 # - Inflation (ascending=True, so 1 = best/lowest inflation)
 # Display: year, npl, npl_rank, gdp, gdp_rank, inflation, inflation_rank
 # Write your code here:
-
-
-
-# ============================================================
+npl_series = summary_df.set_index('year')['npl']
+rank_npl = npl_series.rank(ascending=False)
+gdp_series = summary_df.set_index('year')['gdp']
+rank_gdp = gdp_series.rank(ascending=True)
+inflation_series= summary_df.set_index('year')['inflation']
+rank_inf = inflation_series.rank(ascending=True)
+ex_rank = pd.DataFrame({
+    'npl':npl_series,
+    'npl_rank':rank_npl,
+    'gdp':gdp_series,
+    'gdp_rank':rank_gdp,
+    'inflation':inflation_series,
+    'inflation_rank':rank_inf
+})
+print(ex_rank)
+# ==============================================
+# ==============
 # EXERCISE 8: Find Extremes Using Diff
 # ============================================================
 print("\n" + "="*60)
@@ -203,10 +238,21 @@ print("="*60)
 # - Year with biggest NPL increase
 # - Year with biggest NPL decrease
 # Write your code here:
+gdp_series= summary_df.set_index('year')['gdp']
+gdp_change = gdp_series.diff()
+npl_series = summary_df.set_index('year')['npl']
+npl_change = npl_series.diff()
+gdp_max = gdp_change.idxmax()
+gdp_min = gdp_change.idxmin()
+npl_max = npl_change.idxmin()
+npl_min = npl_change.idxmax()
+print(f"gdp_max:{gdp_max}({gdp_change[gdp_max]:.2f}%)")
+print(f"gdp_min:{gdp_min}({gdp_change[gdp_min]:.2f}%)")
+print(f"npl_max:{npl_max}({npl_change[npl_max]:.2f}%)")
+print(f"npl_min:{npl_min}({npl_change[npl_min]:.2f}%)")
 
-
-
-# ============================================================
+# =======================
+# =====================================
 # WEEK 2-3 REVIEW: GROUPBY & AGGREGATIONS
 # ============================================================
 
