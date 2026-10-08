@@ -266,7 +266,11 @@ print("="*60)
 # TODO: Group by both gdp_class and npl_class
 # Calculate: count, avg inflation, min/max npl for each combination
 # Write your code here:
-
+grouped = summary_df.groupby(['gdp_class','npl_class'])[['inflation','npl']].agg({
+    'npl':['min','max','count'],
+    'inflation':['mean'],
+})
+print(grouped)
 
 
 # ============================================================
@@ -282,7 +286,13 @@ print("="*60)
 # - Values: average inflation
 # Use aggfunc='mean'
 # Write your code here:
-
+pivot_table = summary_df.pivot_table(
+    values='inflation',
+    index='gdp_class',
+    columns='npl_class',
+    aggfunc='mean'
+).round(2)
+print(pivot_table)
 
 
 # ============================================================
@@ -311,6 +321,27 @@ inner_merge = summary_df.merge(
     how='inner'
 )
 print(f"{inner_merge}")
+outer_merge= summary_df.merge(
+    unemployment_df,
+    on = 'year',
+    how='outer'
+)
+print(outer_merge)
+left_merge = summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='left'
+)
+print(left_merge)
+right_merge= summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='right'
+)
+print(right_merge)
+
+
+
 
 
 # ============================================================
@@ -326,8 +357,16 @@ print("="*60)
 # - average npl
 # - average unemployment_rate
 # Write your code here:
-
-
+merged = summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='left'
+)
+grouped = merged.groupby('gdp_class')[['npl','unemployment_rate']].agg({
+    'npl':['mean','count'],
+    'unemployment_rate':['mean']
+})
+print(f"{grouped}")
 
 # ============================================================
 # EXERCISE 13: Complex Chain - Merge, Filter, GroupBy
