@@ -381,8 +381,17 @@ print("="*60)
 # 3. GroupBy npl_class
 # 4. Calculate: count, avg gdp, avg unemployment
 # Write your code here:
-
-
+merged = summary_df.merge(
+    unemployment_df,
+    on='year',
+    how='left'
+)
+filtered= merged[merged['unemployment_rate'].notna()]
+grouped= filtered.groupby('npl_class')[['gdp','unemployment_rate']].agg({
+    'gdp':['count','mean'],
+    'unemployment_rate':['mean']
+})
+print(grouped)
 
 # ============================================================
 # EXERCISE 14: Rolling Window + Classification
@@ -395,9 +404,19 @@ print("="*60)
 # Create classification: if rolling_npl < 8 = "improving", else "deteriorating"
 # Display: year, npl, rolling_3yr_npl, classification
 # Write your code here:
-
-
-
+npl_series= summary_df.set_index('year')['npl']
+roll_npl= npl_series.rolling(window=3,min_periods=1).mean()
+def classify_npl(rolling_npl):
+    if rolling_npl < 8:
+        return 'improving'
+    else:
+        return 'deteriorating'
+expected_npl=pd.DataFrame({
+    'npl':npl_series,
+    'roll_npl_3yr':roll_npl,
+    'class':roll_npl.apply(classify_npl)
+})
+print(f"{expected_npl}")
 # ============================================================
 # EXERCISE 15: Complete Analysis Report
 # ============================================================
@@ -412,29 +431,23 @@ print("="*60)
 # - Rank by economic health (combine GDP rank + inverse NPL rank)
 # - Display: year, gdp, gdp_3yr_rolling, npl, npl_3yr_rolling, gdp_change, npl_change, combined_rank
 # Write your code here:
+gdp_series = summary_df.set_index('year')['gdp']
+yr3_roll_gdp = gdp_series.rolling(window=3,min_periods=1).mean()
+gdp_change= gdp_series.diff()
+gdp_rank= gdp_series.rank(ascending=True)
+npl_series= summary_df.set_index('year')['npl']
+yr3_roll_npl = npl_series.rolling(window=3,min_periods=1).mean()
+npl_change= npl_series.diff()
+npl_rank = npl_series.rank(ascending=False)
+combined_rank= gdp_rank + (16- npl_rank)
+worked=pd.DataFrame({
+    'gdp':gdp_series,
+    'yr3_gdp':yr3_roll_gdp,
+    'gdp_change':gdp_change,
+    'npl':npl_series,
+    'yr3_npl':yr3_roll_npl,
+    'npl_change':npl_change,
+    'combined_rank':combined_rank
+})
+print(worked)
 
-
-
-# ============================================================
-# REFLECTION QUESTIONS
-# ============================================================
-print("\n" + "="*60)
-print("REFLECTION QUESTIONS FOR THIS WEEK")
-print("="*60)
-print("""
-TIME SERIES CONCEPTS:
-1. What's the difference between rolling() and expanding()?
-2. When would you use rank() vs diff()?
-3. How do NaN values appear in rolling calculations vs expanding?
-4. Why is year-over-year change important for analysis?
-
-INTEGRATION WITH PREVIOUS WEEKS:
-5. How would you combine rolling averages with groupby?
-6. How would you merge data then apply rolling windows?
-7. When would you rank data within each group (groupby + rank)?
-8. How do you identify data quality issues after merging?
-
-REAL-WORLD APPLICATION:
-9. What story does Kenya's rolling NPL average tell?
-10. Which technique (rolling, ranking, or diff) best reveals the banking crisis?
-""")
