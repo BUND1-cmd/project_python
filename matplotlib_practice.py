@@ -52,17 +52,42 @@ sacco_deposits = (50 + np.cumsum(rng.normal(1.2, 2.0, 24))).round(1)   # KES mil
 #       faint gridlines, legend.
 # INSIGHT: In one sentence, what is the NPL story?
 # YOUR CODE:
+npl = df['npl'].values
+years= df['year'].values
+fig,ax = plt.subplots(figsize=(10,5))
+ax.plot(years,npl,linewidth=2,marker='o',markersize=5,label='npl',color='red')
+ax.set_title('npl chart')
+ax.set_ylabel('npl')
+ax.set_xlabel('years')
+ax.grid(True,alpha=0.5)
+ax.legend()
 
-
-
+plt.tight_layout()
+plt.show()
 # %%
 # A2 [CORE] Three lines, one chart
 # TASK: Plot GDP, NPL and inflation on the same axes. Give each its own colour,
 #       line style and marker. Put the legend in the upper left.
 # INSIGHT: Which line is hardest to read on a shared axis, and why?
 # YOUR CODE:
+gdp= df['gdp'].values
+npl=df['npl'].values
+years= df['year'].values
+inflation=df['inflation'].values
+
+fig,ax=plt.subplots(1,figsize=(12,6))
+ax.plot(years,gdp,linewidth=4,marker='D',markersize=4,label='gdp',color='blue')
+ax.plot(years,npl,linewidth=4,marker='*',markersize=4,label='npl',color='green',linestyle='--')
+ax.plot(years,inflation,linewidth=4,marker='o',markersize=4,label='inflation',color='red',linestyle='-.')
+ax.set_title('gdp,npl,inflation combination')
+ax.set_ylabel('values')
+ax.set_xlabel('years')
+ax.grid(True,alpha=0.4)
+ax.legend(loc="upper left")
 
 
+plt.tight_layout()
+plt.show()
 
 # %%
 # A3 [CORE] Axis control
@@ -70,7 +95,21 @@ sacco_deposits = (50 + np.cumsum(rng.normal(1.2, 2.0, 24))).round(1)   # KES mil
 #       (b) the y-axis runs from 0 to 15.
 # INSIGHT: How does starting the y-axis at 0 change how dramatic the chart looks?
 # YOUR CODE:
+npl = df['npl'].values
+years= df['year'].values
+fig,ax = plt.subplots(figsize=(10,5))
+ax.plot(years,npl,linewidth=2,marker='o',markersize=5,label='npl',color='red')
+ax.set_title('npl chart')
+ax.set_ylabel('npl')
+ax.set_ylim(0,15)
+ax.set_xlabel('years')
+ax.set_xticks(years)
+plt.setp(ax.get_xticklabels(),rotation=45,ha="right")
+ax.grid(True,alpha=0.5)
+ax.legend()
 
+plt.tight_layout()
+plt.show()
 
 
 # %%
