@@ -119,17 +119,64 @@ plt.show()
 # INSIGHT: How many years sit above the threshold?
 # CHECK: your count should be 6
 # YOUR CODE:
+npl = df['npl'].values
+years= df['year'].values
+fig,ax=plt.subplots(figsize=(10,5))
+ax.plot(years,npl,linewidth=2,marker='o',markersize=4,label='npl',color='red')
+ax.set_title('npl')
+ax.set_xlabel('years')
+ax.set_ylim(0,15)
+ax.set_ylabel('npl')
+ax.set_xticks(years)
+plt.setp(ax.get_xticklabels(),rotation=45,ha="right")
+ax.axhline(y=10,color='black',linestyle='--',label='critical(10%)')
+ax.axvline(x=2020,color='red',linestyle=':',label='covid-19')
+ax.grid(True,alpha=0.6)
+ax.legend(loc="upper left")
 
+plt.tight_layout()
+plt.show()
 
-
+above=(npl>10).sum()
+print(f"years above 10% :{above}")
 # %%
 # A5 [STRETCH] Annotations
 # TASK: On the GDP chart, use an arrow annotation to mark the worst year and the best year,
 #       with the value written in the label.
 # INSIGHT: Why do annotations make a chart more useful for a manager?
 # YOUR CODE:
+gdp=df['gdp'].values
+years=df['year'].values
 
+fig,ax=plt.subplots(figsize=(12,6))
+ax.plot(years,gdp,linewidth=4,marker='o',markersize=5,label='gdp',color='green')
+ax.set_title('gdp trendline')
+ax.set_ylabel('gdp')
+ax.set_xlabel('years')
+ax.set_ylim(-2,10)
+ax.set_xticks(years)
+plt.setp(ax.get_xticklabels(),rotation=45,ha="right")
+worst_gdp =gdp.argmin()
+best_gdp=gdp.argmax()
+ax.annotate(
+    f"worst:{years[worst_gdp]}({gdp[worst_gdp]:.1f}%)",
+    xy=(years[worst_gdp],gdp[worst_gdp]),
+    xytext=(20,25),
+    textcoords="offset points",
+    arrowprops=dict(arrowstyle="->",color="black")
+)
+ax.annotate(
+    f"{years[best_gdp]}({gdp[best_gdp]:.1f}%)",
+    xy=(years[best_gdp],gdp[best_gdp]),
+    xytext=(20,-30),
+    textcoords="offset points",
+    arrowprops=dict(arrowstyle="->",color="black")
+)
+ax.grid(True,alpha=0.6)
+ax.legend(loc="upper left")
 
+plt.tight_layout()
+plt.show()
 
 # %%
 # A6 [STRETCH] Shading
@@ -137,8 +184,44 @@ plt.show()
 #       region below zero growth in red.
 # INSIGHT: What does shading add that a line alone does not?
 # YOUR CODE:
+import matplotlib.pyplot as plt
 
+gdp = df['gdp'].values
+years= df['year'].values
 
+fig,ax=plt.subplots(figsize=(12,6))
+ax.plot(years,gdp,linewidth=4,marker='D',markersize=4,label='gdp',color='blue')
+ax.set_title('kenya gdp`s growth')
+ax.set_ylabel('gdp')
+ax.set_ylim(-2,10)
+ax.set_xlabel('years')
+ax.set_xticks(years)
+plt.setp(ax.get_xticklabels(),rotation=45,ha="right")
+
+worst_gdp=gdp.argmin()
+best_gdp=gdp.argmax()
+
+ax.annotate(
+    f"worst:{years[worst_gdp]}({gdp[worst_gdp]:.1f})",
+    xy=(years[worst_gdp],gdp[worst_gdp]),
+    xytext=(20,30),
+    textcoords="offset points",
+    arrowprops=dict(arrowstyle="->",color="black")
+)
+ax.annotate(
+    f"best:{years[best_gdp]}({gdp[best_gdp]:.1f})",
+    xy=(years[best_gdp],gdp[best_gdp]),
+    xytext=(30,-40),
+    textcoords="offset points",
+    arrowprops=dict(arrowstyle="->",color="black")
+)
+ax.axvspan(2019.5,2020.5,color='grey',alpha=0.2,label='covid 2020')
+ax.fill_between(years,gdp,0,where=gdp<0,alpha=0.5,color='red',zorder=3,label='contraction',interpolate=True)
+ax.grid(True,alpha=0.2)
+ax.legend(loc="upper left")
+
+plt.tight_layout()
+plt.show()
 
 # ############################################################
 # PART B — BAR CHARTS
