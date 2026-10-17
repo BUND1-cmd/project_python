@@ -233,7 +233,24 @@ plt.show()
 #       (Build the colour list with a loop or list comprehension.)
 # INSIGHT: What does the colour pattern tell you at a glance?
 # YOUR CODE:
+npl = df['npl'].values
+years = df['year'].values
 
+fig,ax=plt.subplots(figsize=(12,6))
+
+colors=[
+    "red" if value>10
+    else "orange" if value>5
+    else "green"
+    for value in npl
+]
+ax.bar(years,npl,color=colors)
+ax.set_title('NPL BAR CHART')
+ax.grid(True,alpha=0.4)
+ax.legend(loc="upper left")
+
+plt.tight_layout()
+plt.show()
 
 
 # %%
@@ -242,6 +259,28 @@ plt.show()
 #       (largest at the top).
 # INSIGHT: Which branch carries the most exposure?
 # YOUR CODE:
+import numpy as np
+import matplotlib.pyplot as plt
+
+branches=np.array(['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret'])
+loan_book=np.array(loan_book)
+
+order = np.argsort(loan_book)[::-1]
+loan_book_order=loan_book[order]
+branches=branches[order]
+
+fig,ax=plt.subplots(figsize=(12,6))
+
+ax.barh(branches,loan_book_order,color='green')
+ax.invert_yaxis()
+ax.set_ylabel('branches')
+ax.set_xlabel('loan_book_order')
+ax.set_title('loan_book')
+ax.grid(True,alpha=0.5,axis='x')
+
+plt.tight_layout()
+plt.show()
+
 
 
 
