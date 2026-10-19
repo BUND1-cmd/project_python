@@ -290,8 +290,25 @@ plt.show()
 #       You will need to shift each group of bars on the x-axis yourself.
 # INSIGHT: In which year is the gap between NPL and GDP widest?
 # YOUR CODE:
+recents = df[df['year']>=2020]
+years_r = recents['year'].tolist()
+positions =list(range(len(years_r)))
+w = 0.25
 
+fig,ax=plt.subplots(figsize=(12,6))
+ax.bar([p - w for p in positions],recents['gdp'],width=w,label='gdp',color='blue')
+ax.bar(positions,recents['npl'],width=w,label='npl',color='red')
+ax.bar([p+w for p in positions],recents['inflation'],width=w,label='inflation',color='green')
 
+ax.set_title('gdp,npl,inflation bar chart')
+ax.set_xlabel('years')
+ax.set_ylabel('percentage%')
+ax.set_xticks(positions)
+ax.set_xticklabels(years_r)
+ax.grid(True,alpha=0.3,axis='y')
+ax.legend(loc="upper left")
+
+plt.show()
 
 # %%
 # B4 [ADVANCED] Stacked bars
