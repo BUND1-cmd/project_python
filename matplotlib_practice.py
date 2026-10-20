@@ -317,8 +317,26 @@ plt.show()
 # INSIGHT: Which branch has the largest NON-PERFORMING amount in KES, and is it the same
 #          branch that has the highest NPL ratio?
 # YOUR CODE:
+branch_df = pd.DataFrame({
+    'branches':branches,
+    'loan_book':loan_book,
+    'npl_pct':npl_by_branch
+})
+branch_df['non_performing']=branch_df['loan_book']*branch_df['npl_pct']/100
+branch_df['performing']=branch_df['loan_book']-branch_df['non_performing']
 
+fig,ax=plt.subplots(figsize=(12,6))
+ax.bar(branch_df['branches'],branch_df['performing'],label='performing',color='green')
+ax.bar(branch_df['branches'],branch_df['non_performing'],bottom=branch_df['performing'],label='non_performing',color='red')
+ax.set_xlabel('branches')
+ax.set_ylabel('loan_book')
+plt.xticks(rotation=45,ha="right")
+ax.set_title('non_performing&performing loans')
+ax.grid(True,alpha=0.4,axis='y')
+ax.legend(loc='upper left')
 
+plt.tight_layout()
+plt.show()
 
 # %%
 # B5 [STRETCH] Value labels
