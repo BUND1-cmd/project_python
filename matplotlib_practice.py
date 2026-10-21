@@ -343,7 +343,27 @@ plt.show()
 # TASK: Take your B1 chart and print the NPL value above every bar (1 decimal place).
 # INSIGHT: When do value labels help, and when do they clutter?
 # YOUR CODE:
+npl= df['npl'].values
+years= df['year'].values
 
+fig,ax=plt.subplots(figsize=(12,6))
+colors=[
+    'red' if value>10
+    else 'orange' if value>5
+    else 'green'
+    for value in npl
+]
+bars=ax.bar(years,npl,color=colors)
+ax.set_title('npl')
+ax.set_ylabel('npl')
+ax.set_xlabel('years')
+plt.xticks(rotation=45,ha="right")
+ax.bar_label(bars,fmt="%.1f",fontsize=8)
+ax.grid(True,alpha=0.4,axis='y')
+
+
+plt.tight_layout()
+plt.show()
 
 
 # ############################################################
@@ -355,6 +375,46 @@ plt.show()
 # TASK: Three charts side by side: GDP, NPL, inflation. Share the x-axis. Each has its own title.
 # INSIGHT: What do you see when the three are lined up that you did not see separately?
 # YOUR CODE:
+gdp = df['gdp'].values
+npl= df['npl'].values
+inflation=df['inflation'].values
+years=df['year'].values
+gap = npl-gdp
+
+fig,axes=plt.subplots(2,2,figsize=(14,8))
+
+axes[0,0].plot(years,gdp,label='gdp',linewidth=2,color='blue',marker='o',markersize=0.5)
+axes[0,0].set_title('gdp line')
+axes[0,0].set_ylabel('gdp')
+axes[0,0].grid(True,alpha=0.4)
+axes[0,0].legend(loc="upper left")
+
+axes[0,1].bar(years,npl,label='npl',color="blue")
+axes[0,1].set_title('npl bars')
+axes[0,1].set_ylabel('npl')
+axes[0,1].grid(True,alpha=0.4,axis='y')
+axes[0,1].legend(loc="upper left")
+
+axes[1,0].plot(years,inflation,label="inflation",color="red",linewidth=2,marker='D',markersize=0.4)
+axes[1,0].set_title('inflation line')
+axes[1,0].set_ylabel('inflation')
+axes[1,0].grid(True,alpha=0.4)
+axes[1,0].legend(loc="upper left")
+
+axes[1,1].bar(years,gap,color='green',label='gap')
+axes[1,1].axhline(0,color='black',linewidth=2)
+axes[1,1].set_title('npl minus gdp')
+axes[1,1].set_ylabel('gap values')
+axes[1,1].legend(loc="upper left")
+axes[1,1].grid(True,alpha=0.4)
+
+for ax in axes.flat:
+    ax.set_xlabel('years')
+    ax.set_xticks(years)
+    ax.tick_params(axis='x',labelrotation=45)
+fig.suptitle('Kenya Financial Health Dashboard, 2010-2024', fontsize=14)
+plt.tight_layout()
+plt.show()
 
 
 
