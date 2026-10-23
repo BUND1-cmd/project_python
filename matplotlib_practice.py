@@ -379,34 +379,28 @@ gdp = df['gdp'].values
 npl= df['npl'].values
 inflation=df['inflation'].values
 years=df['year'].values
-gap = npl-gdp
 
-fig,axes=plt.subplots(2,2,figsize=(14,8))
 
-axes[0,0].plot(years,gdp,label='gdp',linewidth=2,color='blue',marker='o',markersize=0.5)
-axes[0,0].set_title('gdp line')
-axes[0,0].set_ylabel('gdp')
-axes[0,0].grid(True,alpha=0.4)
-axes[0,0].legend(loc="upper left")
+fig,axes=plt.subplots(1,3,figsize=(14,8))
 
-axes[0,1].bar(years,npl,label='npl',color="blue")
-axes[0,1].set_title('npl bars')
-axes[0,1].set_ylabel('npl')
-axes[0,1].grid(True,alpha=0.4,axis='y')
-axes[0,1].legend(loc="upper left")
+axes[0].plot(years,gdp,label='gdp',linewidth=2,color='blue',marker='o',markersize=0.5)
+axes[0].set_title('gdp line')
+axes[0].set_ylabel('gdp')
+axes[0].grid(True,alpha=0.4)
+axes[0].legend(loc="upper left")
 
-axes[1,0].plot(years,inflation,label="inflation",color="red",linewidth=2,marker='D',markersize=0.4)
-axes[1,0].set_title('inflation line')
-axes[1,0].set_ylabel('inflation')
-axes[1,0].grid(True,alpha=0.4)
-axes[1,0].legend(loc="upper left")
+axes[1].bar(years,npl,label='npl',color="blue")
+axes[1].set_title('npl bars')
+axes[1].set_ylabel('npl')
+axes[1].grid(True,alpha=0.4,axis='y')
+axes[1].legend(loc="upper left")
 
-axes[1,1].bar(years,gap,color='green',label='gap')
-axes[1,1].axhline(0,color='black',linewidth=2)
-axes[1,1].set_title('npl minus gdp')
-axes[1,1].set_ylabel('gap values')
-axes[1,1].legend(loc="upper left")
-axes[1,1].grid(True,alpha=0.4)
+axes[2].plot(years,inflation,label="inflation",color="red",linewidth=2,marker='D',markersize=0.4)
+axes[2].set_title('inflation line')
+axes[2].set_ylabel('inflation')
+axes[2].grid(True,alpha=0.4)
+axes[2].legend(loc="upper left")
+
 
 for ax in axes.flat:
     ax.set_xlabel('years')
@@ -424,7 +418,46 @@ plt.show()
 #       NPL minus GDP gap bars (bottom-right). Add one overall title for the whole figure.
 # INSIGHT: Write the headline a newspaper would run on this dashboard.
 # YOUR CODE:
+gdp =df['gdp'].values
+npl=df['npl'].values
+years=df['year'].values
+inflation=df['inflation'].values
+gap= npl-gdp
 
+fig,axes=plt.subplots(2,2,figsize=(16,8))
+
+axes[0,0].plot(years,gdp,linewidth=4,marker='o',markersize=2,label='gdp',color='blue')
+axes[0,0].set_title('gdp trend line')
+axes[0,0].set_ylabel('gdp')
+axes[0,0].grid(True,alpha=0.5)
+axes[0,0].legend(loc="upper left")
+
+axes[0,1].bar(years,npl,label='npl',color='green')
+axes[0,1].set_title('npl bar chart')
+axes[0,1].set_ylabel('npl')
+axes[0,1].grid(True,alpha=0.4,axis='y')
+axes[0,1].legend(loc="upper left")
+
+axes[1,0].plot(years,inflation,linewidth=4,marker='D',markersize=2,color='yellow',label='inflation')
+axes[1,0].set_title('inflation trend line')
+axes[1,0].set_ylabel('inflation')
+axes[1,0].grid(True,alpha=0.4)
+axes[1,0].legend(loc="upper left")
+
+axes[1,1].bar(years,gap,label='npl-gdp',color='red')
+axes[1,1].set_title('npl-gdp results bar')
+axes[1,1].set_ylabel('gap values')
+axes[1,1].grid(True,alpha=0.4,axis='y')
+axes[1,1].legend(loc="upper left")
+
+for ax in axes.flat:
+    ax.set_xlabel('years')
+    ax.set_xticks(years)
+    ax.tick_params(axis='x',rotation=45)
+
+fig.suptitle('economic waves')
+plt.tight_layout()
+plt.show()
 
 
 # %%
@@ -433,7 +466,32 @@ plt.show()
 #       each axis label coloured to match its line.
 # INSIGHT: Why can twin axes mislead readers? When are they justified?
 # YOUR CODE:
+npl=df['npl'].values
+gdp=df['gdp'].values
+years=df['year'].values
 
+fig,ax1=plt.subplots(figsize=(12,6))
+ax2=ax1.twinx()
+
+ax1.plot(years,gdp,linewidth=2,label='gdp',marker='o',color='blue')
+ax2.plot(years,npl,label='npl',linewidth=3,color='green',marker='D')
+
+ax1.set_ylabel('gdp',color='blue')
+ax1.tick_params(axis='y',labelcolor='blue')
+
+ax2.set_ylabel('npl',color='green')
+ax2.tick_params(axis='y',labelcolor='green')
+
+ax1.set_xlabel('year')
+ax1.set_title('gdp vs npl growth')
+ax1.grid(True,alpha=0.4)
+
+h1,l1 = ax1.get_legend_handles_labels()
+h2,l2 =ax2.get_legend_handles_labels()
+ax1.legend(h1+h2,l1+l2,loc="lower center")
+
+plt.tight_layout()
+plt.show()
 
 
 # %%
@@ -443,8 +501,29 @@ plt.show()
 #       Then use it three times in a 1 x 3 figure.
 # INSIGHT: What is the benefit of putting chart code in a function?
 # YOUR CODE:
+years =df['year'].values
+gdp=df['gdp'].values
+inflation=df['inflation'].values
+npl=df['npl'].values
 
+def plot_indicators (ax,x,y,title,color,threshold=None):
+    ax.plot(x,y,marker='o',linewidth=2,markersize=2,color=color)
+    ax.set_title(title)
+    ax.set_xlabel('year')
+    ax.set_xticks(x)
+    ax.tick_params(axis='x',rotation=45)
+    ax.grid(True,alpha=0.4)
+    if threshold is not None:
+        ax.axhline(threshold,color='black',linestyle='--',linewidth=1.5,label=f'threshold({threshold}%)')
+        ax.legend(loc="upper center")
 
+fig,axes=plt.subplots(1,3,figsize=(14,7))
+plot_indicators(axes[0],years,gdp,'gdp_growth%','blue')
+plot_indicators(axes[1],years,npl,'npl_growth','red',threshold=10)
+plot_indicators(axes[2],years,inflation,'inflation','green',threshold=6)
+plt.tight_layout()
+plt.show()
+    
 
 # ############################################################
 # PART D — DISTRIBUTIONS & RELATIONSHIPS  (all STRETCH)
