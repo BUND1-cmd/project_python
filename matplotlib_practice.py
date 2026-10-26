@@ -534,7 +534,24 @@ plt.show()
 # TASK: Histogram of inflation with 5 bins and a vertical line at the mean.
 # INSIGHT: Is inflation symmetric, or skewed by one extreme year? Which year?
 # YOUR CODE:
+inflation = df['inflation'].values
 
+
+fig,ax=plt.subplots(figsize=(12,6))
+ax.hist(inflation,bins=5,color='red',alpha=0.7,edgecolor='black')
+
+mean_infl=inflation.mean()
+ax.axvline(mean_infl,color='red',linestyle="--",label=(f"mean({mean_infl:.2f})"),linewidth=2)
+
+
+ax.set_title('inflation histogram')
+ax.set_xlabel('inflation')
+ax.set_ylabel('years')
+ax.grid(True,alpha=0.5)
+ax.legend(loc='upper left')
+
+plt.tight_layout()
+plt.show()
 
 
 # %%
@@ -543,7 +560,26 @@ plt.show()
 #       and label the 2020 point.
 # INSIGHT: Do the later years (darker/lighter colours) cluster in a particular corner?
 # YOUR CODE:
+gdp=df['gdp'].values
+npl=df['npl'].values
+years=df['year'].values
 
+fig,ax=plt.subplots(figsize=(12,6))
+sc = ax.scatter(gdp,npl,c=years,cmap='viridis',s=60)
+fig.colorbar(sc,ax=ax,label='year')
+i =list(years).index(2020)
+ax.annotate('2020 (COVID)',xy=(gdp[i],npl[i]),xytext=(15,15),
+            textcoords='offset points',arrowprops=dict(arrowstyle='->'))
+
+ax.set_title('gdp,npl scatter')
+ax.set_ylabel('npl')
+ax.set_xlabel('gdp')
+plt.xticks(rotation=45,ha='right')
+ax.grid(True,alpha=0.4)
+ax.legend(loc='upper left')
+
+plt.tight_layout()
+plt.show()
 
 
 # %%
