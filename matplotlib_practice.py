@@ -588,6 +588,33 @@ plt.show()
 # INSIGHT: Is the relationship between GDP and NPL strong, weak or negligible?
 #          What does that say about "growth fixes bad loans"?
 # YOUR CODE:
+import numpy as np
+years=df['year'].values
+gdp=df['gdp'].values
+npl=df['npl'].values
+
+fig,ax=plt.subplots(figsize=(15,7))
+sc= ax.scatter(gdp,npl,c=years,cmap='viridis')
+fig.colorbar(sc,ax=ax,label='years')
+i=list(years).index(2020)
+ax.annotate('2020 covid',xy=(gdp[i],npl[i]),xytext=(15,15),textcoords='offset points',arrowprops=dict(arrowstyle='->'))
+
+r=df['gdp'].corr(df['npl'])
+slope,intercept=np.polyfit(gdp,npl,1)
+
+x_line=[gdp.min(),gdp.max()]
+y_line=[slope*x+intercept for x in x_line]
+ax.plot(x_line,y_line,color='blue',linestyle='--',label='trendline')
+
+ax.set_title(f'scatter&trendline,r={r:.2f}')
+ax.set_xlabel('gdp')
+ax.set_ylabel('npl')
+ax.grid(True,alpha=0.6)
+plt.xticks(rotation=45,ha='right')
+ax.legend(loc='upper left')
+
+plt.tight_layout()
+plt.show()
 
 
 
@@ -596,7 +623,18 @@ plt.show()
 # TASK: Box plots of GDP, NPL and inflation side by side.
 # INSIGHT: Which indicator is the most spread out? Which has outliers?
 # YOUR CODE:
+gdp=df['gdp'].values
+npl=df['npl'].values
+inflation=df['inflation'].values
 
+fig,ax=plt.subplots(figsize=(12,6))
+ax.boxplot([gdp,npl,inflation],tick_labels=['gdp','npl','inflation'])
+ax.set_title('Spread of GDP, NPL and inflation, 2010-2024 (%)')
+ax.set_ylabel('values')
+ax.grid(True,alpha=0.5)
+
+plt.tight_layout()
+plt.show()
 
 
 # %%
