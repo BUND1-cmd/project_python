@@ -64,8 +64,34 @@ def load_data(path):
     summary_df =pd.DataFrame(summary_data)
     return summary_df
 
+def add_features(df):
+    df=df.copy()
+    df['rolling_3yr_npl']=df['npl'].rolling(window=3,min_periods=1).mean()
+    df['rolling_3yr_gdp']=df['gdp'].rolling(window=3,min_periods=1).mean()
+    df['rolling_3yr_inflation']=df['inflation'].rolling(window=3,min_periods=1).mean()
+    df['npl_expanding']=df['npl'].expanding().sum()
+    df['gdp_expanding']=df['gdp'].expanding().sum()
+    df['inflation_expanding']=df['inflation'].expanding().sum()
+    df['npl_change']=df['npl'].diff()
+    df['gdp_change']=df['gdp'].diff()
+    df['inflation_change']=df['inflation'].diff()
+    df['gdp_rank']=df['gdp'].rank(ascending=True)
+    df['npl_rank']=df['npl'].rank(ascending=False)
+    df['health_score']=df['gdp_rank']+df['npl_rank']
+    
+    return df
+
+
+
+
 if __name__=="__main__":
         summary_df=load_data('Kenya_Financial_Data_CLEAN.xlsx')
-        print(summary_df)
+        summary_df=add_features(summary_df)
+        print(summary_df[['year','npl','rolling_3yr_npl','gdp','rolling_3yr_gdp','inflation','rolling_3yr_inflation',
+                          'npl_expanding','gdp_expanding','inflation_expanding',
+                          'gdp_change','npl_change','inflation_change',
+                          'gdp_rank',
+                          'npl_rank',
+                          'health_score']].to_string())
 
     
