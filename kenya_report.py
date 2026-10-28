@@ -1,4 +1,6 @@
 import pandas as pd
+import os
+import matplotlib.pyplot as plt
 
 
 
@@ -81,17 +83,56 @@ def add_features(df):
     
     return df
 
+def make_dashboard(df,out_path):
+    os.makedirs(os.path.dirname(out_path)or'.',exist_ok=True)
+    fig,axes=plt.subplots(2,2,figsize=(14,9))
+    axes[0,0].plot(df['year'],df['gdp'],marker='o',linewidth=2,color='green')
+    axes[0,0].set_title('gdp growth%')
+    axes[0,0].grid(True,alpha=0.7)
+
+    axes[0,1].bar(df['year'],df['npl'],color='red')
+    axes[0,1].set_title('npl growth%')
+    axes[0,1].grid(True,alpha=0.6)
+
+    axes[1,0].hist(df['inflation'],bins=5,color='red',alpha=0.7,edgecolor='black')
+    axes[1,0].set_title('inflation histogram')
+    axes[1,0].grid(True,alpha=0.5)
+    
+
+    sc=axes[1,1].scatter(df['year'],df['health_score'],c=df['year'],cmap='viridis',s=60)
+    fig.colorbar(sc,ax=axes[1,1],label='year')
+    axes[1,1].set_title('heath score scatter point')
+    axes[1,1].grid(True,alpha=0.6)
+
+    for ax in [axes[0,0],axes[0,1],axes[1,1]]:
+        ax.set_xticks(df['year'])
+        ax.tick_params(axis='x',rotation=45)
+
+
+    fig.savefig(out_path,dpi=300)
+    plt.show()
+
+def main():
+    summary_df=load_data('Kenya_Financial_Data_CLEAN.xlsx')
+    summary_df=add_features(summary_df)
+    make_dashboard(summary_df,'charts/kenya_dashboard.png')
+
+    first=summary_df.iloc[0]
+    last=summary_df.iloc[-1]
+    gap=summary_df['npl']-summary_df['gdp']
+    worst=summary_df.loc[gap.idxmax()]
+    recent=summary_df.tail(7)
+    years_above_10 = (recent['npl'] > 10).sum()
+
+    print("\nKey findings")
+    print(f"1. Growth has not protected the banks: NPL rose from {first['npl']:.1f}% in {int(first['year'])} "
+          f"to {last['npl']:.1f}% in {int(last['year'])}, while GDP averaged {summary_df['gdp'].mean():.1f}% a year.")
+    print(f"2. COVID exposed the weakest point: in {int(worst['year'])} GDP contracted to {worst['gdp']:.1f}% "
+          f"while NPL was already {worst['npl']:.1f}%, the widest gap of the period at {gap.max():.1f} points.")
+    print(f"3. The NPL rise is structural: NPL stayed above 10% in {years_above_10} of the last {len(recent)} years.")
+    print("\nReport saved to charts/kenya_dashboard.png")
 
 
 
 if __name__=="__main__":
-        summary_df=load_data('Kenya_Financial_Data_CLEAN.xlsx')
-        summary_df=add_features(summary_df)
-        print(summary_df[['year','npl','rolling_3yr_npl','gdp','rolling_3yr_gdp','inflation','rolling_3yr_inflation',
-                          'npl_expanding','gdp_expanding','inflation_expanding',
-                          'gdp_change','npl_change','inflation_change',
-                          'gdp_rank',
-                          'npl_rank',
-                          'health_score']].to_string())
-
-    
+        main()
