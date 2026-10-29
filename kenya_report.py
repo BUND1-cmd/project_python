@@ -115,6 +115,7 @@ def make_dashboard(df,out_path):
 def main():
     summary_df=load_data('Kenya_Financial_Data_CLEAN.xlsx')
     summary_df=add_features(summary_df)
+    summary_df.to_csv('kenya_summary.csv',index=False)
     make_dashboard(summary_df,'charts/kenya_dashboard.png')
 
     first=summary_df.iloc[0]
